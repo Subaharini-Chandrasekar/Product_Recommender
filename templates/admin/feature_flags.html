@@ -1,0 +1,55 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Feature Flag Management</h2>
+        <p>Toggle features on and off without deploying new code.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">Current Feature Flags</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Feature Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flag_name, flag_enabled in flags.items() %}
+                        <tr>
+                            <td>{{ flag_name }}</td>
+                            <td>
+                                <span class="badge {% if flag_enabled %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ 'Enabled' if flag_enabled else 'Disabled' }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="post" class="d-inline">
+                                    <input type="hidden" name="flag_name" value="{{ flag_name }}">
+                                    <input type="hidden" name="enabled" value="{{ 'false' if flag_enabled else 'true' }}">
+                                    <button type="submit" class="btn btn-sm {% if flag_enabled %}btn-danger{% else %}btn-success{% endif %}">
+                                        {{ 'Disable' if flag_enabled else 'Enable' }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock %}

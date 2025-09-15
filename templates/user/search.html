@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Search Results</h2>
+        <p>Results for: "{{ search_term }}"</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Matching Products</div>
+            <div class="card-body">
+                {% if products %}
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            {% if product.image_url %}
+                            <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}" style="height: 150px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text text-muted">{{ product.category }}</p>
+                                <p class="card-text">${{ "%.2f"|format(product.cost) }}</p>
+                                {% if product.description %}
+                                <p class="card-text small">{{ product.description }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No products found matching "{{ search_term }}".</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">Recommendations</div>
+            <div class="card-body">
+                {% if recommendations %}
+                <ul class="list-group">
+                    {% for product in recommendations %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ product.name }}</strong>
+                                <small class="d-block text-muted">{{ product.category }}</small>
+                            </div>
+                            <span>${{ "%.2f"|format(product.cost) }}</span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No recommendations available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('user.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock %}
